@@ -158,33 +158,31 @@ function Battle(army1, army2, loses=2, losesDraw=2){
             for (let index = 0; index < losesDraw; index++) {
                 const indexArmy1 = _getIndexMaxUnit(army1.units);
                 const indexArmy2 = _getIndexMaxUnit(army2.units);
-                lostArmy1.concat(army1.units.splice(indexArmy1,1));
-                lostArmy2.concat(army2.units.splice(indexArmy2,1));
+                lostArmy1 = lostArmy1.concat(army1.units.splice(indexArmy1,1));
+                lostArmy2 = lostArmy2.concat(army2.units.splice(indexArmy2,1));
             }
-            army1.records.concat(new Record("Draw", lostArmy1, army2.name));
-            army2.records.concat(new Record("Draw", lostArmy2, army1.name));
+            army1.records = army1.records.concat(new Record("Draw", lostArmy1, army2.name));
+            army2.records = army2.records.concat(new Record("Draw", lostArmy2, army1.name));
             console.log("[INFO] Draw!");
         } else if (armyPoints1 > armyPoints2) {
             let lostArmy2 = [];
             for (let index = 0; index < loses; index++) {
                 const indexArmy2 = _getIndexMaxUnit(army2.units);
-                lostArmy2.concat(army2.units.splice(indexArmy2,1));
+                lostArmy2 = lostArmy2.concat(army2.units.splice(indexArmy2,1));
             }
             army1.gold += 100;
-            army1.records.concat(new Record("Victory", [], army2.name));
-            army2.records.concat(new Record("Lost", lostArmy2, army1.name));
+            army1.records = army1.records.concat(new Record("Victory", [], army2.name));
+            army2.records = army2.records.concat(new Record("Lost", lostArmy2, army1.name));
             console.log(`[INFO] ${army1.name} won!`);        
         } else {
             let lostArmy1 = []; 
             for (let index = 0; index < losesDraw; index++) {
                 const indexArmy1 = _getIndexMaxUnit(army1.units);
-                const del = army1.units.splice(indexArmy1,1);
-                console.log(del);
-                lostArmy1.concat(del);
+                lostArmy1 = lostArmy1.concat(army1.units.splice(indexArmy1,1));
             }
-            army1.records.concat([new Record("Lost", lostArmy1, army2.name)]);
+            army1.records = army1.records.concat(new Record("Lost", lostArmy1, army2.name));
             army2.gold += 100;
-            army2.records.concat([new Record("Victory", [], army1.name)]); 
+            army2.records = army2.records.concat(new Record("Victory", [], army1.name)); 
             console.log(`[INFO] ${army2.name} won!`);           
         }
     }
