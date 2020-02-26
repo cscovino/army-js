@@ -1,0 +1,5 @@
+[Army|Id;Name;Gold;Civilization|battle();train();transformation()]
+[Unit|Id;Name;Type;Points|train();transformation()]
+[Record|Id;Result;Lost;Against]
+[Army]o->[Record]
+[Army]o->[Unit]
