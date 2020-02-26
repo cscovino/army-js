@@ -1,7 +1,33 @@
+//////////////////////////////////// UTILS ////////////////////////////////////////////
 let unitCounter = 1;
 let recordCounter = 1;
 let armyCounter = 1;
 
+function _createArmy(pikeman, archer, knight){
+    let units = [];
+    for (let index = 0; index < pikeman; index++) {
+        units.push(new Unit("pikeman"))
+    }
+    for (let index = 0; index < archer; index++) {
+        units.push(new Unit("archer"))
+    }
+    for (let index = 0; index < knight; index++) {
+        units.push(new Unit("knight"))
+    }
+    return units
+}
+
+function _getPoints(army){
+    return army.units.reduce((a,b) => a + (b['points'] || 0), 0);
+}
+
+function _getIndexMaxUnit(units){
+    const tmp = units.map(unit => unit.points);
+    const maxPoints = Math.max(...tmp);
+    return tmp.indexOf(maxPoints);
+}
+
+//////////////////////////////////// MODELS ///////////////////////////////////////////
 function Unit(type="Unit"){
     this.id = unitCounter;
     this.name = type + " " + this.id.toString();
@@ -55,20 +81,6 @@ function Unit(type="Unit"){
     unitCounter++;
 }
 
-function _createArmy(pikeman, archer, knight){
-    let units = [];
-    for (let index = 0; index < pikeman; index++) {
-        units.push(new Unit("pikeman"))
-    }
-    for (let index = 0; index < archer; index++) {
-        units.push(new Unit("archer"))
-    }
-    for (let index = 0; index < knight; index++) {
-        units.push(new Unit("knight"))
-    }
-    return units
-}
-
 function Army(civil="Civilization"){
     this.id = armyCounter;
     this.name = civil + " " + this.id.toString();
@@ -91,8 +103,8 @@ function Army(civil="Civilization"){
     }
     this.train = (id) => {
         const unit = this.units.filter(unit => unit.id === id);
-        unit.train();
-        switch (unit.type) {
+        unit[0].train();
+        switch (unit[0].type) {
             case "Knight":
                 this.gold -= 30;
                 console.log(`[INFO] ${this.name} has now 30 gold less`);
@@ -109,27 +121,23 @@ function Army(civil="Civilization"){
     }
     this.transform = (id) => {
         const unit = this.units.filter(unit => unit.id === id);
-        switch (unit.type) {
+        switch (unit[0].type) {
             case "Knight":
                 console.log("[ERROR] A Knight can not execute a transform");
                 break;
             case "Archer":
                 this.gold -= 40;
-                unit.transform();
+                unit[0].transform();
                 console.log(`[INFO] ${this.name} has now 40 gold less`);
                 break;
             case "Pikeman":
                 this.gold -= 30;
-                unit.transform();
+                unit[0].transform();
                 console.log(`[INFO] ${this.name} has now 30 gold less`);
                 break;
         }
     }
     armyCounter++;
-}
-
-function _getPoints(army){
-    return army.units.reduce((a,b) => a + (b['points'] || 0), 0);
 }
 
 function Record(result, lost, against){
@@ -139,12 +147,6 @@ function Record(result, lost, against){
     this.lost = lost;
     this. against = against;
     recordCounter++;
-}
-
-function _getIndexMaxUnit(units){
-    let tmp = units.map((unit) => unit.points);
-    let maxPoints = Math.max(Math, tmp);
-    return tmp.indexOf(maxPoints);
 }
 
 function Battle(army1, army2, loses=2, losesDraw=2){
