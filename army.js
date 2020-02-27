@@ -137,6 +137,47 @@ function Army(civil="Civilization"){
                 break;
         }
     }
+    this.battle = (enemy, loses=2, losesDraw=2) => {
+        if(enemy instanceof Army){
+            console.log(`[INFO] There was a Battle between ${this.name} and ${enemy.name}`);
+            const armyPoints1 = _getPoints(this);
+            const armyPoints2 = _getPoints(enemy);
+            if (armyPoints1 === armyPoints2) {
+                let lostArmy1 = []; 
+                let lostArmy2 = [];
+                for (let index = 0; index < losesDraw; index++) {
+                    const indexArmy1 = _getIndexMaxUnit(this.units);
+                    const indexArmy2 = _getIndexMaxUnit(enemy.units);
+                    lostArmy1 = lostArmy1.concat(this.units.splice(indexArmy1,1));
+                    lostArmy2 = lostArmy2.concat(enemy.units.splice(indexArmy2,1));
+                }
+                this.records = this.records.concat(new Record("Draw", lostArmy1, enemy.name));
+                enemy.records = enemy.records.concat(new Record("Draw", lostArmy2, this.name));
+                console.log("[INFO] Draw!");
+            } else if (armyPoints1 > armyPoints2) {
+                let lostArmy2 = [];
+                for (let index = 0; index < loses; index++) {
+                    const indexArmy2 = _getIndexMaxUnit(enemy.units);
+                    lostArmy2 = lostArmy2.concat(enemy.units.splice(indexArmy2,1));
+                }
+                this.gold += 100;
+                this.records = this.records.concat(new Record("Victory", [], enemy.name));
+                enemy.records = enemy.records.concat(new Record("Lost", lostArmy2, this.name));
+                console.log(`[INFO] ${this.name} won!`);        
+            } else {
+                let lostArmy1 = []; 
+                for (let index = 0; index < losesDraw; index++) {
+                    const indexArmy1 = _getIndexMaxUnit(this.units);
+                    lostArmy1 = lostArmy1.concat(this.units.splice(indexArmy1,1));
+                }
+                this.records = this.records.concat(new Record("Lost", lostArmy1, enemy.name));
+                enemy.gold += 100;
+                enemy.records = enemy.records.concat(new Record("Victory", [], this.name)); 
+                console.log(`[INFO] ${enemy.name} won!`);           
+            }
+        }
+        else console.log("[ERROR] A Battle needs 2 armies");
+    }
     armyCounter++;
 }
 
@@ -149,46 +190,4 @@ function Record(result, lost, against){
     recordCounter++;
 }
 
-function Battle(army1, army2, loses=2, losesDraw=2){
-    if(army1 instanceof Army && army2 instanceof Army){
-        console.log(`[INFO] There was a Battle between ${army1.name} and ${army2.name}`);
-        const armyPoints1 = _getPoints(army1);
-        const armyPoints2 = _getPoints(army2);
-        if (armyPoints1 === armyPoints2) {
-            let lostArmy1 = []; 
-            let lostArmy2 = [];
-            for (let index = 0; index < losesDraw; index++) {
-                const indexArmy1 = _getIndexMaxUnit(army1.units);
-                const indexArmy2 = _getIndexMaxUnit(army2.units);
-                lostArmy1 = lostArmy1.concat(army1.units.splice(indexArmy1,1));
-                lostArmy2 = lostArmy2.concat(army2.units.splice(indexArmy2,1));
-            }
-            army1.records = army1.records.concat(new Record("Draw", lostArmy1, army2.name));
-            army2.records = army2.records.concat(new Record("Draw", lostArmy2, army1.name));
-            console.log("[INFO] Draw!");
-        } else if (armyPoints1 > armyPoints2) {
-            let lostArmy2 = [];
-            for (let index = 0; index < loses; index++) {
-                const indexArmy2 = _getIndexMaxUnit(army2.units);
-                lostArmy2 = lostArmy2.concat(army2.units.splice(indexArmy2,1));
-            }
-            army1.gold += 100;
-            army1.records = army1.records.concat(new Record("Victory", [], army2.name));
-            army2.records = army2.records.concat(new Record("Lost", lostArmy2, army1.name));
-            console.log(`[INFO] ${army1.name} won!`);        
-        } else {
-            let lostArmy1 = []; 
-            for (let index = 0; index < losesDraw; index++) {
-                const indexArmy1 = _getIndexMaxUnit(army1.units);
-                lostArmy1 = lostArmy1.concat(army1.units.splice(indexArmy1,1));
-            }
-            army1.records = army1.records.concat(new Record("Lost", lostArmy1, army2.name));
-            army2.gold += 100;
-            army2.records = army2.records.concat(new Record("Victory", [], army1.name)); 
-            console.log(`[INFO] ${army2.name} won!`);           
-        }
-    }
-    else console.log("[ERROR] A Battle needs 2 armies");
-}
-
-module.exports = {Army, Unit, Battle};
+module.exports = {Army, Unit};
