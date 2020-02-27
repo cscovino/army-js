@@ -7,9 +7,12 @@ An example to modeling objects with JavaScript.
 ### Units
 
 There are three types of units with different scores:
-- Pikeman   5 points
-- Archer    10 points
-- Knight    20 points
+
+|            |Points|
+|:----------:|:----:|
+|   Pikeman  |   5  |
+|   Archer   |  10  |
+|   Knight   |  20  |
 
 ### Armies
 
@@ -48,9 +51,11 @@ Also you can transform a specific unit to another by paying the price according 
 #### Battles
 
 An army can attack another at any time. The winner will be the army with more points and the results will be:
-- Winner Army: will earn 100 gold coins.
-- Loser Army: will lose the two units with more points.
-- Draw: both army will lose the two units with more points.
+
+|  Result   |            Winner Army            |             Loser Army            |
+|:---------:|:---------------------------------:|:---------------------------------:|
+|An army won|         Earn 100 gold coins       |Lose the two units with more points|
+|   Draw    |Lose the two units with more points|Lose the two units with more points|
 
 ## Usage
 
